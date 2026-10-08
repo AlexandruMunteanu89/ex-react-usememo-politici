@@ -1,4 +1,17 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, memo } from "react"
+
+const PoliticianCard = memo(({name, image, position, biography}) => {
+  console.log("Card");
+  
+  return (
+    <div className="card">
+      <img src={image} alt={name} />
+      <h2>{name}</h2>
+      <p><strong>Posizione:</strong>{position}</p>
+      <p>{biography}</p>
+    </div>
+  );
+});
 
 function App() {
 
@@ -33,12 +46,7 @@ function App() {
         />
         <div className="politicians-list">
           {filteredPoliticians.map(politician => (
-            <div className="card" key={politician.id}>
-              <img src={politician.image} alt={politician.name}/>
-              <h2>{politician.name}</h2>
-              <p><strong>Posizione:</strong>{politician.position}</p>
-              <p>{politician.biography}</p>
-            </div>
+            <PoliticianCard key={politician.id} {...politician} />
           ))}
 
         </div>
@@ -49,13 +57,9 @@ function App() {
 
 export default App;
 
-// Premessa: Stai costruendo una pagina per visualizzare una lista di politici. Tuttavia, vuoi evitare 
-// calcoli inutili e ottimizzare la performance del tuo componente. Segui le milestone per migliorare 
-// progressivamente il codice
+// Milestone 3: Ottimizzare il rendering delle card con React.memo
+// Attualmente, ogni volta che l’utente digita nella barra di ricerca, tutte le card vengono ri-renderizzate, anche quelle che non sono cambiate.
+// Usa React.memo() per evitare il ri-render delle card quando le loro props non cambiano.
+// Aggiungi un console.log() dentro il componente Card per verificare che venga renderizzato solo quando necessario.
 
-// Milestone 2: Implementare la ricerca ottimizzata
-// Aggiungi un campo di ricerca (<input type="text">) sopra la lista dei politici.
-// Permetti all’utente di filtrare i risultati in base a nome o biografia (se il testo cercato è incluso). Suggerimento: Creare un array derivato filtrato, che viene aggiornato solo quando cambia la lista di politici o il valore della ricerca.
-// ❌ Non usare useEffect per aggiornare l’array filtrato.
-
-// Obiettivo: Migliorare le prestazioni evitando ricalcoli inutili quando il valore della ricerca non cambia.
+// Obiettivo: Se la lista filtrata cambia, solo le nuove card devono essere renderizzate, mentre le altre rimangono in memoria senza essere ridisegnate.
